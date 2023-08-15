@@ -1,0 +1,78 @@
+{
+  // 组件自动导入
+  "easycom": {
+    "autoscan": true,
+    "custom": {
+      // uni-ui 规则如下配置
+      "^uni-(.*)": "@dcloudio/uni-ui/lib/uni-$1/uni-$1.vue"
+    }
+  },
+  "pages": [
+    // pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+    {
+      "path": "pages/farm/index",
+      "style": {
+        "navigationBarTitleText": "农田"
+      }
+    },
+    {
+      "path": "pages/disaster/index",
+      "style": {
+        "navigationBarTitleText": "灾损"
+      }
+    },
+    {
+      "path": "pages/claim/index",
+      "style": {
+        "navigationBarTitleText": "理赔"
+      }
+    },
+    {
+      "path": "pages/mine/index",
+      "style": {
+        "navigationBarTitleText": "我的"
+      }
+    }
+  ],
+  "globalStyle": {
+    "navigationBarTextStyle": "black",
+    "navigationBarBackgroundColor": "#F8F8F8",
+    "backgroundColor": "#F8F8F8"
+  },
+  "tabBar": {
+    "color": "#7A7E83",
+    "selectedColor": "#00A796",
+    "borderStyle": "black",
+    "backgroundColor": "#ffffff",
+    "height": "164rpx",
+    "fontSize": "28rpx",
+    "iconWidth": "52rpx",
+    "spacing": "3px",
+    "list": [
+      {
+        "pagePath": "pages/farm/index",
+        "text": "农田",
+        "iconPath": "static/images/tabBar/farm.png",
+        "selectedIconPath": "static/images/tabBar/farm_active.png"
+      },
+      {
+        "pagePath": "pages/disaster/index",
+        "text": "灾损",
+        "iconPath": "static/images/tabBar/disaster.png",
+        "selectedIconPath": "static/images/tabBar/disaster_active.png"
+      },
+      {
+        "pagePath": "pages/claim/index",
+        "text": "理赔",
+        "iconPath": "static/images/tabBar/claim.png",
+        "selectedIconPath": "static/images/tabBar/claim_active.png"
+      },
+      {
+        "pagePath": "pages/mine/index",
+        "text": "我的",
+        "iconPath": "static/images/tabBar/mine.png",
+        "selectedIconPath": "static/images/icons/tabBar/mine.png"
+      }
+    ]
+  }
+}
