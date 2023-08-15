@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- 2d4fc3b33ee8bda3109b32b3c50f46d2 -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>灾损</title>
+    <script
+      type="text/javascript"
+      src="http://api.tianditu.gov.cn/api?v=4.0&tk=2d4fc3b33ee8bda3109b32b3c50f46d2"
+    ></script>
+    <style>
+      .tdt-control-copyright {
+        display: none;
+      }
+    </style>
+    <script>
+      var map;
+      var zoom = 15;
+      var lay;
+      var onlyMapLay;
+      function onLoad() {
+        var imageURL =
+          "http://t0.tianditu.gov.cn/img_w/wmts?" +
+          "SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=img&STYLE=default&TILEMATRIXSET=w&FORMAT=tiles" +
+          "&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}&tk=2d4fc3b33ee8bda3109b32b3c50f46d2";
+        //创建自定义图层对象
+        lay = new T.TileLayer(imageURL, { minZoom: 1, maxZoom: 18 });
+        var config = { layers: [lay] };
+        //初始化地图对象
+        map = new T.Map("mapDiv", config);
+        //设置显示地图的中心点和级别
+        map.centerAndZoom(new T.LngLat(120.2265, 30.496), zoom);
+        //允许鼠标滚轮缩放地图
+        map.enableScrollWheelZoom();
+      }
+    </script>
+  </head>
+
+  <body onLoad="onLoad()" style="margin: 0">
+    <div id="mapDiv" style="width: 100%; height: calc(100vh - 17px)"></div>
+  </body>
+</html>

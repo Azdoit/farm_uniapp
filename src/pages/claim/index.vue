@@ -1,5 +1,5 @@
 <template>
-<view></view>
+<view bg-red >理赔</view>
 </template>
 
 <script setup>

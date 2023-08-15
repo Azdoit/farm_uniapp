@@ -1,7 +1,6 @@
 import { createSSRApp } from "vue";
 import { createPinia } from 'pinia';
 import { createPersistedState } from 'pinia-plugin-persistedstate';
-import 'ol/ol.css'
 import 'uno.css'
 import App from "./App.vue";
 // 引入Pinia和持久缓存的设置
