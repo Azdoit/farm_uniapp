@@ -12,31 +12,35 @@
     {
       "path": "pages/farm/index",
       "style": {
-        "navigationBarTitleText": "农田"
+        "navigationBarTitleText": "农田",
+        "navigationStyle": "custom" // 隐藏默认导航
       }
     },
     {
       "path": "pages/disaster/index",
       "style": {
-        "navigationBarTitleText": "灾损"
+        "navigationBarTitleText": "灾损",
+        "navigationStyle": "custom" // 隐藏默认导航
       }
     },
     {
       "path": "pages/claim/index",
       "style": {
-        "navigationBarTitleText": "理赔"
+        "navigationBarTitleText": "理赔",
+        "navigationStyle": "custom" // 隐藏默认导航
       }
     },
     {
       "path": "pages/mine/index",
       "style": {
-        "navigationBarTitleText": "我的"
+        "navigationBarTitleText": "我的",
+        "navigationStyle": "custom" // 隐藏默认导航
       }
     }
   ],
   "globalStyle": {
-    "navigationBarTextStyle": "black",
-    "navigationBarBackgroundColor": "#F8F8F8",
+    "navigationBarTextStyle": "white",
+    "navigationBarBackgroundColor": "#27ba9b",
     "backgroundColor": "#F8F8F8"
   },
   "tabBar": {

@@ -37,9 +37,11 @@ export default defineConfig({
     [/^gap-(\d+)$/, ([, d]) => ({ 'gap': `${d}rpx` })],
     [/^text-(\d+)$/, ([, d]) => ({ 'font-size': `${d}rpx` })],
     [/^c-(.+)$/, ([, color]) => ({ 'color': `#${color}` })],
+    [/^bg-(.+)$/, ([, color]) => ({ 'background-color': `#${color}` })],
     ['bg1', { 'background': 'rgba(255,255,255,0.7)' }],
     ['bg2', { 'background': 'rgba(84, 147, 255, 0.9)' }],
     ['border1', { 'border': '1px solid #fff' }],
     ['border2', { 'border': '1px solid rgba(197,219,255,0.49)' }],
+    ['border3', { 'border': '1px solid #E1E1E1' }],
   ]
 })

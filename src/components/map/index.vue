@@ -15,7 +15,6 @@ import { Fill, Stroke, Style, Text } from "ol/style.js";
 import { ScaleLine, defaults as defaultControls } from "ol/control.js";
 import TileWMS from "ol/source/TileWMS.js";
 import allFarm1 from "./geojson/allFarm1.json";
-import { defineProps, onMounted } from "vue";
 
 console.log("加载map");
 let businessMap,
