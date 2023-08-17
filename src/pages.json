@@ -20,14 +20,17 @@
       "path": "pages/disaster/index",
       "style": {
         "navigationBarTitleText": "灾损",
-        "navigationStyle": "custom" // 隐藏默认导航
+        "navigationStyle": "custom", // 隐藏默认导航
+        "app-plus":{
+          "scrollIndicator":"none" //当前页面不显示滚动条
+                }
       }
     },
     {
       "path": "pages/claim/index",
       "style": {
-        "navigationBarTitleText": "理赔",
-        "navigationStyle": "custom" // 隐藏默认导航
+        "navigationBarTitleText": "理赔"
+        // "navigationStyle": "custom" // 隐藏默认导航
       }
     },
     {
@@ -39,8 +42,8 @@
     }
   ],
   "globalStyle": {
-    "navigationBarTextStyle": "white",
-    "navigationBarBackgroundColor": "#27ba9b",
+    "navigationBarTextStyle": "black",
+    "navigationBarBackgroundColor": "white",
     "backgroundColor": "#F8F8F8"
   },
   "tabBar": {

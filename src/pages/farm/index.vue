@@ -1,5 +1,5 @@
 <template>
-  <view>
+  <view w-full h-full relative>
     <!-- 执行ol模块中的olChange方法 -->
     <text :prop="allFarm1" :change:prop="ol.onChange"></text>
     <view id="map" class="map" :style="{ paddingTop: safeAreaInsets?.top + 'px' }"></view>
@@ -17,6 +17,56 @@
       </view>
       <text :prop="curDate" :change:prop="ol.receiveCurDate"></text>
     </view>
+    <view absolute w-160 h-70 bg2 border5 rd-20 top-90 right-38 center>
+      <image src="/static/images/farm/modify.png" w-45 h-45 mr-5/>
+      <text text-24 c-fff font-700>我要修改</text>
+    </view>
+    <view center absolute bottom-80 w-full>
+      <image
+      src="/static/images/farm/camera.png"
+      w-100 h-90 
+    />
+    </view>
+    <view w-752 h-400 absolute c-fff :class="{ popup: isShow, popdown: !isShow }">
+    <view h-72 bg-00BFBF center text-32 @tap="isShow = !isShow">
+      <text font-700>所有地块</text>
+      <image
+        :src="
+          isShow
+            ? '/static/images/disaster/down.png'
+            : '/static/images/disaster/up.png'
+        "
+        w-30
+        h-30
+        ml-10
+      />
+    </view>
+    <view bg-fff text-28 h-328>
+      <view c-3d3d3d pt-22 pb-18 h-68 around box-border font-700>
+        <text>田块名称</text>
+        <text>种植作物</text>
+        <text>种植面积</text>
+        <text>承保面积</text>
+        <text>承保率</text>
+      </view>
+      <scroll-view scroll-y c-4e4e4e h-260>
+        <view
+          v-for="(item, index) in fields"
+          :key="index"
+          class="list_item"
+          flex
+          px-10
+          py-24
+        >
+          <text>{{ item.fieldName }}</text>
+          <text ml-20>{{ item.cropName }}</text>
+          <text ml-80>{{ item.cropArea }}</text>
+          <text ml-100 c-00bfbf>{{ item.contractArea}}</text>
+          <text ml-90 font-700 c-00bfbf>{{ item.contractRate}}</text>
+        </view>
+      </scroll-view>
+    </view>
+  </view>
   </view>
 </template>
 
@@ -32,6 +82,58 @@ const dateList = ref([
   },
   {
     date: "7-11",
+  },
+]);
+const isShow = ref(true);
+const fields = reactive([
+  {
+    fieldName: "鱼塘西南田块1",
+    cropName: "玉米",
+    cropArea: 14.6,
+    contractArea: 14.6,
+    contractRate: '100%'
+  },
+  {
+    fieldName: "鱼塘西南田块2",
+    cropName: "玉米",
+    cropArea: 14.6,
+    contractArea: 14.6,
+    contractRate: '100%'
+  },
+  {
+    fieldName: "鱼塘西南田块3",
+    cropName: "莲藕",
+    cropArea: 14.6,
+    contractArea: 14.6,
+    contractRate: '100%'
+  },
+  {
+    fieldName: "鱼塘西南田块4",
+    cropName: "玉米",
+    cropArea: 14.6,
+    contractArea: 14.6,
+    contractRate: '100%'
+  },
+  {
+    fieldName: "鱼塘西南田块5",
+    cropName: "莲藕",
+    cropArea: 14.6,
+    contractArea: 14.6,
+    contractRate: '100%'
+  },
+  {
+    fieldName: "鱼塘西南田块6",
+    cropName: "玉米",
+    cropArea: 14.6,
+    contractArea: 14.6,
+    contractRate: '100%'
+  },
+  {
+    fieldName: "鱼塘西南田块7",
+    cropName: "莲藕",
+    cropArea: 14.6,
+    contractArea: 14.6,
+    contractRate: '100%'
   },
 ]);
 const changeDate = (index) => {
@@ -50,12 +152,7 @@ import { Vector as VectorSource } from "ol/source.js";
 import { Vector as VectorLayer } from "ol/layer.js";
 import { Fill, Stroke, Style, Text } from "ol/style.js";
 import TileWMS from "ol/source/TileWMS.js";
-
-import {
-  ScaleLine,
-  defaults as defaultControls,
-  MousePosition,
-} from "ol/control";
+import {ScaleLine,defaults as defaultControls, MousePosition,} from "ol/control";
 
 let map, cropHigh, cropLow, cropOrigin, resultSource, resultLayer,allFarm1,safeAreaInsets;
 
@@ -122,7 +219,7 @@ export default {
         layers: [],
         view: new View({
           projection: "EPSG:4326",
-          center: [120.228, 30.496],
+          center: [120.2265, 30.496],
           zoom: 17.5,
           maxZoom: 20,
           minZoom: 5,
@@ -263,8 +360,8 @@ export default {
 
 <style scoped lang="scss">
 .map {
-  height: 100vh;
-  width: 100vh;
+  height: 100%;
+  width: 100%;
 }
 .imgDate {
   position: absolute;
@@ -275,6 +372,7 @@ export default {
   top: 150rpx;
   left: 40rpx;
   text {
+    font-weight: 700;
     color: #fff;
     font-size: 28rpx;
     margin-top: 5rpx;

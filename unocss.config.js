@@ -40,8 +40,11 @@ export default defineConfig({
     [/^bg-(.+)$/, ([, color]) => ({ 'background-color': `#${color}` })],
     ['bg1', { 'background': 'rgba(255,255,255,0.7)' }],
     ['bg2', { 'background': 'rgba(84, 147, 255, 0.9)' }],
+    ['bg3', { 'background': 'rgba(79, 254, 113, 0.34)' }],
     ['border1', { 'border': '1px solid #fff' }],
     ['border2', { 'border': '1px solid rgba(197,219,255,0.49)' }],
     ['border3', { 'border': '1px solid #E1E1E1' }],
+    ['border4', { 'border': '1px solid #34FF5D' }],
+    ['border5', { 'border': '1px solid rgba(255,255,255,0.3)' }],
   ]
 })
