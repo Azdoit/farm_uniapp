@@ -18,7 +18,18 @@
         >
       </view>
     </view>
-    <view absolute w-160 h-70 bg2 border5 rd-20 top-75 right-38 center @tap="evaluate">
+    <view
+      absolute
+      w-160
+      h-70
+      bg2
+      border5
+      rd-20
+      top-75
+      right-38
+      center
+      @tap="evaluate"
+    >
       <image src="/static/images/disaster/evalulate.png" w-45 h-45 />
       <text text-24 c-fff font-700>开始评估</text>
     </view>
@@ -31,6 +42,7 @@
         mb-30
         lh-56
         text-center
+        @tap="changeShow(index)"
       >
         <view
           rd-10
@@ -39,6 +51,10 @@
           <text text-28 font-700 c-fff>{{ item.text }}</text>
         </view>
       </view>
+      <text
+        :prop="[illShow1, illShow2, illShow3, illShow4]"
+        :change:prop="ol.receiveIll"
+      ></text>
     </view>
     <view
       w-752
@@ -113,7 +129,11 @@ const allFarms = [
 // 获取屏幕边界到安全区域距离
 const { safeAreaInsets } = uni.getSystemInfoSync();
 const ill = reactive([
-  { color: "rgba(238, 0, 0, 0.6)", border: "1px solid #FF0000", text: "重度" },
+  {
+    color: "rgba(238, 0, 0, 0.6)",
+    border: "1px solid #FF0000",
+    text: "重度",
+  },
   {
     color: "rgba(255, 162, 0, 0.6)",
     border: "1px solid #FFA200",
@@ -123,6 +143,7 @@ const ill = reactive([
     color: "rgba(255, 255, 7, 0.6)",
     border: "1px solid #FFFF07",
     text: "轻度",
+
   },
   {
     color: "rgba(44, 255, 93, 0.6)",
@@ -130,6 +151,14 @@ const ill = reactive([
     text: "无",
   },
 ]);
+const illShow1 = ref(true);
+const illShow2 = ref(true);
+const illShow3 = ref(true);
+const illShow4 = ref(true);
+const illShowArr = [illShow1, illShow2, illShow3, illShow4];
+const changeShow = (index) => {
+  illShowArr[index].value = !illShowArr[index].value;
+};
 const fields = reactive([
   {
     name: "鱼塘西南田块",
@@ -169,14 +198,14 @@ const fields = reactive([
 ]);
 const isShow = ref(true);
 const evaluate = () => {
-    uni.showLoading({
-        title: '加载中',
-        mask: true
-    })
-    setTimeout(() => {
-        uni.hideLoading()
-    }, 2000);
-}
+  uni.showLoading({
+    title: "加载中",
+    mask: true,
+  });
+  setTimeout(() => {
+    uni.hideLoading();
+  }, 2000);
+};
 </script>
 <script module="ol" lang="renderjs">
 import { Map, View } from "ol";
@@ -189,11 +218,12 @@ import { Fill, Stroke, Style, Text } from "ol/style.js";
 import TileWMS from "ol/source/TileWMS.js";
 import {ScaleLine,defaults as defaultControls, MousePosition,} from "ol/control";
 
-let 
+let
   map,
   allFarm1,
   allFarms,
   safeAreaInsets,
+  features,
   features1,
   features2,
   features3,
@@ -263,119 +293,119 @@ export default {
     //    });
     //    map.addLayer(resultLayer);
 
-       features1 = new GeoJSON().readFeatures(allFarms[0]);
-       features2 = new GeoJSON().readFeatures(allFarms[1]);
-       features3 = new GeoJSON().readFeatures(allFarms[2]);
-       features4 = new GeoJSON().readFeatures(allFarms[3]);
-       features2_1 = new GeoJSON().readFeatures(allFarms[4]);
-       features2_2 = new GeoJSON().readFeatures(allFarms[5]);
-       features2_3 = new GeoJSON().readFeatures(allFarms[6]);
-       features2_4 = new GeoJSON().readFeatures(allFarms[7]);
-       featuresGrid1 = new GeoJSON().readFeatures(allFarms[8]);
-       featuresGrid2 = new GeoJSON().readFeatures(allFarms[9]);
-       const features = [
-         features1,
-         features2_1,
-         features2,
-         features2_2,
-         features3,
-         features2_3,
-         features4,
-         features2_4,
-      ];
-      for (let i = 0; i < 4; i++) {
-        resultSources[i].addFeatures(features[2 * i]);
-        resultSources[i].addFeatures(features[2 * i + 1]);
-      }
-      gridSource1.addFeatures(featuresGrid1);
-    //   console.log(gridSource1);
-      gridSource2.addFeatures(featuresGrid2);
+      //  features1 = new GeoJSON().readFeatures(allFarms[0]);
+      //  features2 = new GeoJSON().readFeatures(allFarms[1]);
+      //  features3 = new GeoJSON().readFeatures(allFarms[2]);
+      //  features4 = new GeoJSON().readFeatures(allFarms[3]);
+      //  features2_1 = new GeoJSON().readFeatures(allFarms[4]);
+      //  features2_2 = new GeoJSON().readFeatures(allFarms[5]);
+      //  features2_3 = new GeoJSON().readFeatures(allFarms[6]);
+      //  features2_4 = new GeoJSON().readFeatures(allFarms[7]);
+      //  featuresGrid1 = new GeoJSON().readFeatures(allFarms[8]);
+      //  featuresGrid2 = new GeoJSON().readFeatures(allFarms[9]);
+      //  features = [
+      //    features1,
+      //    features2_1,
+      //    features2,
+      //    features2_2,
+      //    features3,
+      //    features2_3,
+      //    features4,
+      //    features2_4,
+      // ];
+      // for (let i = 0; i < 4; i++) {
+      //   resultSources[i].addFeatures(features[2 * i]);
+      //   resultSources[i].addFeatures(features[2 * i + 1]);
+      // }
+    //   gridSource1.addFeatures(featuresGrid1);
+    // //   console.log(gridSource1);
+    //   gridSource2.addFeatures(featuresGrid2);
 
-      resultLayer1 = new VectorLayer({
-        source: resultSource1,
-        style: new Style({
-          fill: new Fill({
-            color: "rgba(238, 0, 0, 0.6)",
-          }),
-          stroke: new Stroke({
-            color: "rgba(238, 0, 0, 0.6)",
-            width: 1,
-          }),
-          zIndex:100
-        }),
-      });
-      resultLayer2 = new VectorLayer({
-        source: resultSource2,
-        style: new Style({
-          fill: new Fill({
-            color: "rgba(255, 162, 0, 0.6)",
-          }),
-          stroke: new Stroke({
-            color: "rgba(255, 162, 0, 0.6)",
-            width: 1,
-          }),
-          zIndex:100
-        }),
-      });
-      resultLayer3 = new VectorLayer({
-        source: resultSource3,
-        style: new Style({
-          fill: new Fill({
-            color: "rgba(255, 255, 7, 0.6)",
-          }),
-          stroke: new Stroke({
-            color: "rgba(255, 255, 7, 0.6)",
-            width: 1,
-          }),
-          zIndex:100
-        }),
-      });
-      resultLayer4 = new VectorLayer({
-        source: resultSource4,
-        style: new Style({
-          fill: new Fill({
-            color: "rgba(44, 255, 93, 0.6)",
-          }),
-          stroke: new Stroke({
-            color: "rgba(44, 255, 93, 0.6)",
-            width: 1,
-          }),
-          zIndex:100
-        }),
-      });
-      gridLayer1 = new VectorLayer({
-        source: gridSource1,
-        style: new Style({
-          fill: new Fill({
-            color: "black",
-          }),
-          stroke: new Stroke({
-            color: "black",
-            width: 1,
-          }),
-          zIndex:100
-        }),
-      });
-      gridLayer2 = new VectorLayer({
-        source: gridSource2,
-        style: new Style({
-        //   fill: new Fill({
-        //     color: "black",
-        //   }),
-          stroke: new Stroke({
-            color: "black",
-            width: 1,
-          }),
-          zIndex:100
-        }),
-      });
+      // resultLayer1 = new VectorLayer({
+      //   source: resultSource1,
+      //   style: new Style({
+      //     fill: new Fill({
+      //       color: "rgba(238, 0, 0, 0.6)",
+      //     }),
+      //     stroke: new Stroke({
+      //       color: "rgba(238, 0, 0, 0.6)",
+      //       width: 1,
+      //     }),
+      //     zIndex:100
+      //   }),
+      // });
+      // resultLayer2 = new VectorLayer({
+      //   source: resultSource2,
+      //   style: new Style({
+      //     fill: new Fill({
+      //       color: "rgba(255, 162, 0, 0.6)",
+      //     }),
+      //     stroke: new Stroke({
+      //       color: "rgba(255, 162, 0, 0.6)",
+      //       width: 1,
+      //     }),
+      //     zIndex:100
+      //   }),
+      // });
+      // resultLayer3 = new VectorLayer({
+      //   source: resultSource3,
+      //   style: new Style({
+      //     fill: new Fill({
+      //       color: "rgba(255, 255, 7, 0.6)",
+      //     }),
+      //     stroke: new Stroke({
+      //       color: "rgba(255, 255, 7, 0.6)",
+      //       width: 1,
+      //     }),
+      //     zIndex:100
+      //   }),
+      // });
+      // resultLayer4 = new VectorLayer({
+      //   source: resultSource4,
+      //   style: new Style({
+      //     fill: new Fill({
+      //       color: "rgba(44, 255, 93, 0.6)",
+      //     }),
+      //     stroke: new Stroke({
+      //       color: "rgba(44, 255, 93, 0.6)",
+      //       width: 1,
+      //     }),
+      //     zIndex:100
+      //   }),
+      // });
+      // gridLayer1 = new VectorLayer({
+      //   source: gridSource1,
+      //   style: new Style({
+      //     fill: new Fill({
+      //       color: "black",
+      //     }),
+      //     stroke: new Stroke({
+      //       color: "black",
+      //       width: 1,
+      //     }),
+      //     zIndex:100
+      //   }),
+      // });
+      // gridLayer2 = new VectorLayer({
+      //   source: gridSource2,
+      //   style: new Style({
+      //   //   fill: new Fill({
+      //   //     color: "black",
+      //   //   }),
+      //     stroke: new Stroke({
+      //       color: "black",
+      //       width: 1,
+      //     }),
+      //     zIndex:100
+      //   }),
+      // });
 
-      map.addLayer(resultLayer1);
-      map.addLayer(resultLayer2);
-      map.addLayer(resultLayer3);
-      map.addLayer(resultLayer4);
-      map.addLayer(gridLayer1);
-      map.addLayer(gridLayer2);
+      // map.addLayer(resultLayer1);
+      // map.addLayer(resultLayer2);
+      // map.addLayer(resultLayer3);
+      // map.addLayer(resultLayer4);
+      // map.addLayer(gridLayer1);
+      // map.addLayer(gridLayer2);
     }, 0);
   },
   methods: {
@@ -462,12 +492,147 @@ export default {
     //     allFarm1 = newValue
     //   },
     receiveFarms(newValue, oldValue, ownerInstance, instance) {
-      allFarms = newValue;
-      console.log(allFarms);
+      // 很奇怪，必须让renderjs获取到的数据放入异步队列里，不能直接执行，否则app里渲染不出geojson数据
+      setTimeout(() => {
+        allFarms = newValue;
+      features1 = new GeoJSON().readFeatures(allFarms[0]);
+       features2 = new GeoJSON().readFeatures(allFarms[1]);
+       features3 = new GeoJSON().readFeatures(allFarms[2]);
+       features4 = new GeoJSON().readFeatures(allFarms[3]);
+       features2_1 = new GeoJSON().readFeatures(allFarms[4]);
+       features2_2 = new GeoJSON().readFeatures(allFarms[5]);
+       features2_3 = new GeoJSON().readFeatures(allFarms[6]);
+       features2_4 = new GeoJSON().readFeatures(allFarms[7]);
+       featuresGrid1 = new GeoJSON().readFeatures(allFarms[8]);
+       featuresGrid2 = new GeoJSON().readFeatures(allFarms[9]);
+       features = [
+         features1,
+         features2_1,
+         features2,
+         features2_2,
+         features3,
+         features2_3,
+         features4,
+         features2_4,
+      ];
+      gridSource1.addFeatures(featuresGrid1);
+      gridSource2.addFeatures(featuresGrid2);
+      for (let i = 0; i < 4; i++) {
+          resultSources[i].addFeatures(features[2 * i]);
+          resultSources[i].addFeatures(features[2 * i + 1]);
+        }
+      gridLayer1 = new VectorLayer({
+        source: gridSource1,
+        style: new Style({
+          fill: new Fill({
+            color: "black",
+          }),
+          stroke: new Stroke({
+            color: "black",
+            width: 1,
+          }),
+          zIndex:101
+        }),
+      });
+      gridLayer2 = new VectorLayer({
+        source: gridSource2,
+        style: new Style({
+        //   fill: new Fill({
+        //     color: "black",
+        //   }),
+          stroke: new Stroke({
+            color: "black",
+            width: 1,
+          }),
+          zIndex:101
+        }),
+      });
+      resultLayer1 = new VectorLayer({
+        source: resultSource1,
+        style: new Style({
+          fill: new Fill({
+            color: "rgba(238, 0, 0, 0.6)",
+          }),
+          stroke: new Stroke({
+            color: "rgba(238, 0, 0, 0.6)",
+            width: 1,
+          }),
+          zIndex:100
+        }),
+      });
+      resultLayer2 = new VectorLayer({
+        source: resultSource2,
+        style: new Style({
+          fill: new Fill({
+            color: "rgba(255, 162, 0, 0.6)",
+          }),
+          stroke: new Stroke({
+            color: "rgba(255, 162, 0, 0.6)",
+            width: 1,
+          }),
+          zIndex:100
+        }),
+      });
+      resultLayer3 = new VectorLayer({
+        source: resultSource3,
+        style: new Style({
+          fill: new Fill({
+            color: "rgba(255, 255, 7, 0.6)",
+          }),
+          stroke: new Stroke({
+            color: "rgba(255, 255, 7, 0.6)",
+            width: 1,
+          }),
+          zIndex:100
+        }),
+      });
+      resultLayer4 = new VectorLayer({
+        source: resultSource4,
+        style: new Style({
+          fill: new Fill({
+            color: "rgba(44, 255, 93, 0.6)",
+          }),
+          stroke: new Stroke({
+            color: "rgba(44, 255, 93, 0.6)",
+            width: 1,
+          }),
+          zIndex:100
+        }),
+      });
+      map.addLayer(gridLayer1);
+      map.addLayer(gridLayer2);
+      map.addLayer(resultLayer1);
+      map.addLayer(resultLayer2);
+      map.addLayer(resultLayer3);
+      map.addLayer(resultLayer4);
+      },
+      0);
+
     },
+    receiveIll(newValue, oldValue, ownerInstance, instance){
+      // 上面定时器等待时长为0，这里为100吧。
+      setTimeout(() => {
+              for (let i = 0; i < 4; i++) {
+        if(newValue[i]){
+          if(resultSources[i].getFeatures().length === 0){
+          resultSources[i].addFeatures(features[2 * i]);
+          resultSources[i].addFeatures(features[2 * i + 1]);
+          console.log('还没有features了');
+          }else {
+            // console.log(resultSources[i].getFeatures());
+            console.log('已经有features了');
+          }
+        }else {
+          resultSources[i].clear();
+        }
+      }
+      }, 100);
+
+
+
+    }
   },
 };
 </script>
 
-<style scoped lang="scss">
-</style>
+<style scoped lang="scss"></style>

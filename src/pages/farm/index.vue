@@ -1,8 +1,12 @@
 <template>
   <view w-full h-full relative>
     <!-- 执行ol模块中的olChange方法 -->
-    <text :prop="allFarm1" :change:prop="ol.onChange"></text>
-    <view id="map" class="map" :style="{ paddingTop: safeAreaInsets?.top + 'px' }"></view>
+    <text :prop="allFarm1" :change:prop="ol.receiveAllFarms"></text>
+    <view
+      id="map"
+      class="map"
+      :style="{ paddingTop: safeAreaInsets?.top + 'px' }"
+    ></view>
     <view class="imgDate">
       <text class="text1">影像</text>
       <text class="text2">日期</text>
@@ -18,61 +22,78 @@
       <text :prop="curDate" :change:prop="ol.receiveCurDate"></text>
     </view>
     <view absolute w-160 h-70 bg2 border5 rd-20 top-90 right-38 center>
-      <image src="/static/images/farm/modify.png" w-45 h-45 mr-5/>
+      <image src="/static/images/farm/modify.png" w-45 h-45 mr-5 />
       <text text-24 c-fff font-700>我要修改</text>
     </view>
     <view center absolute bottom-80 w-full>
-      <image
-      src="/static/images/farm/camera.png"
-      w-100 h-90 
-    />
+      <image src="/static/images/farm/camera.png" w-100 h-90 />
     </view>
-    <view w-752 h-400 absolute c-fff :class="{ popup: isShow, popdown: !isShow }">
-    <view h-72 bg-00BFBF center text-32 @tap="isShow = !isShow">
-      <text font-700>所有地块</text>
-      <image
-        :src="
-          isShow
-            ? '/static/images/disaster/down.png'
-            : '/static/images/disaster/up.png'
-        "
-        w-30
-        h-30
-        ml-10
-      />
-    </view>
-    <view bg-fff text-28 h-328>
-      <view c-3d3d3d pt-22 pb-18 h-68 around box-border font-700>
-        <text>田块名称</text>
-        <text>种植作物</text>
-        <text>种植面积</text>
-        <text>承保面积</text>
-        <text>承保率</text>
+    <view
+      w-752
+      h-400
+      absolute
+      c-fff
+      :class="{ popup: isShow, popdown: !isShow }"
+    >
+      <view h-72 bg-00BFBF center text-32 @tap="isShow = !isShow">
+        <text font-700>所有地块</text>
+        <image
+          :src="
+            isShow
+              ? '/static/images/disaster/down.png'
+              : '/static/images/disaster/up.png'
+          "
+          w-30
+          h-30
+          ml-10
+        />
       </view>
-      <scroll-view scroll-y c-4e4e4e h-260>
-        <view
-          v-for="(item, index) in fields"
-          :key="index"
-          class="list_item"
-          flex
-          px-10
-          py-24
-        >
-          <text>{{ item.fieldName }}</text>
-          <text ml-20>{{ item.cropName }}</text>
-          <text ml-80>{{ item.cropArea }}</text>
-          <text ml-100 c-00bfbf>{{ item.contractArea}}</text>
-          <text ml-90 font-700 c-00bfbf>{{ item.contractRate}}</text>
+      <view bg-fff text-28 h-328>
+        <view c-3d3d3d pt-22 pb-18 h-68 around box-border font-700>
+          <text>田块名称</text>
+          <text>种植作物</text>
+          <text>种植面积</text>
+          <text>承保面积</text>
+          <text>承保率</text>
         </view>
-      </scroll-view>
+        <scroll-view scroll-y c-4e4e4e h-260>
+          <view
+            v-for="(item, index) in fields"
+            :key="index"
+            flex
+            px-10
+            py-24
+            @tap="positionClick(item)"
+          >
+            <text>{{ item.fieldName }}</text>
+            <text ml-20>{{ item.cropName }}</text>
+            <text ml-80>{{ item.cropArea }}</text>
+            <text ml-100 c-00bfbf>{{ item.contractArea }}</text>
+            <text ml-90 font-700 c-00bfbf>{{ item.contractRate }}</text>
+          </view>
+          <text :prop="[lng, lat]" :change:prop="ol.receiveCenter"></text>
+        </scroll-view>
+      </view>
     </view>
-  </view>
+    <view
+      v-show="item.isShow"
+      v-for="(item, index) in fields"
+      :key="item.fieldName"
+      ><PopUp :field="item" @changeShowValue="changeShowValue"
+    /></view>
   </view>
 </template>
 
 <script setup>
 import allFarm1 from "@/components/map/geojson/allFarm1.json";
+import PopUp from "@/components/popup/index.vue";
+// 获取屏幕边界到安全区域距离
+const { safeAreaInsets } = uni.getSystemInfoSync();
+console.log(safeAreaInsets);
+const lng = ref(120.2265);
+const lat = ref(30.496);
 const curDate = ref(0);
+// const test = ref(0)
 const dateList = ref([
   {
     date: "7-9",
@@ -87,61 +108,104 @@ const dateList = ref([
 const isShow = ref(true);
 const fields = reactive([
   {
+    id: 0,
     fieldName: "鱼塘西南田块1",
     cropName: "玉米",
     cropArea: 14.6,
     contractArea: 14.6,
-    contractRate: '100%'
+    contractRate: "100%",
+    contractStart: "2023-8-18",
+    contractEnd: "2024-8-18",
+    centerCor: [120.226869553318309, 30.496591537894496],
+    isShow: false,
   },
   {
+    id: 1,
     fieldName: "鱼塘西南田块2",
     cropName: "玉米",
     cropArea: 14.6,
     contractArea: 14.6,
-    contractRate: '100%'
+    contractRate: "100%",
+    contractStart: "2023-8-18",
+    contractEnd: "2024-8-18",
+    centerCor: [120.226607360935645, 30.495297355281757],
+    isShow: false,
   },
   {
+    id: 2,
     fieldName: "鱼塘西南田块3",
     cropName: "莲藕",
     cropArea: 14.6,
     contractArea: 14.6,
-    contractRate: '100%'
+    contractRate: "100%",
+    contractStart: "2023-8-18",
+    contractEnd: "2024-8-18",
+    centerCor: [120.225178864506205, 30.49520386964074],
+    isShow: false,
   },
   {
+    id: 3,
     fieldName: "鱼塘西南田块4",
     cropName: "玉米",
     cropArea: 14.6,
     contractArea: 14.6,
-    contractRate: '100%'
+    contractRate: "100%",
+    contractStart: "2023-8-18",
+    contractEnd: "2024-8-18",
+    centerCor: [120.225183385064526, 30.495258402942259],
+    isShow: false,
   },
   {
+    id: 4,
     fieldName: "鱼塘西南田块5",
     cropName: "莲藕",
     cropArea: 14.6,
     contractArea: 14.6,
-    contractRate: '100%'
+    contractRate: "100%",
+    contractStart: "2023-8-18",
+    contractEnd: "2024-8-18",
+    centerCor: [120.22992206032464, 30.497681208775045],
+    isShow: false,
   },
   {
+    id: 5,
     fieldName: "鱼塘西南田块6",
     cropName: "玉米",
     cropArea: 14.6,
     contractArea: 14.6,
-    contractRate: '100%'
+    contractRate: "100%",
+    contractStart: "2023-8-18",
+    contractEnd: "2024-8-18",
+    centerCor: [120.231020555996622, 30.497720160144461],
+    isShow: false,
   },
   {
+    id: 6,
     fieldName: "鱼塘西南田块7",
     cropName: "莲藕",
     cropArea: 14.6,
     contractArea: 14.6,
-    contractRate: '100%'
+    contractRate: "100%",
+    contractStart: "2023-8-18",
+    contractEnd: "2024-8-18",
+    centerCor: [120.229994389257755, 30.49692165395405],
+    isShow: false,
   },
 ]);
 const changeDate = (index) => {
   curDate.value = index;
 };
-// 获取屏幕边界到安全区域距离
-const { safeAreaInsets } = uni.getSystemInfoSync()
-console.log(safeAreaInsets);
+const positionClick = (item) => {
+  // 传num的话是直接传值，传数组的话是传proxy。所以一个个传吧。。。
+  lng.value = item.centerCor[0];
+  lat.value = item.centerCor[1];
+  item.isShow = true;
+  isShow.value = !isShow.value;
+};
+const changeShowValue = (id) => {
+  // console.log('我收到了id值：'+id);
+  fields[id].isShow = false;
+};
 </script>
 <script module="ol" lang="renderjs">
 import { Map, View } from "ol";
@@ -154,7 +218,7 @@ import { Fill, Stroke, Style, Text } from "ol/style.js";
 import TileWMS from "ol/source/TileWMS.js";
 import {ScaleLine,defaults as defaultControls, MousePosition,} from "ol/control";
 
-let map, cropHigh, cropLow, cropOrigin, resultSource, resultLayer,allFarm1,safeAreaInsets;
+let map, cropHigh, cropLow, cropOrigin, resultSource, resultLayer,allFarm1,safeAreaInsets,centerCol;
 
 export default {
   name: "c-ol-map",
@@ -243,7 +307,6 @@ export default {
           serverType: "geoserver",
         }),
       });
-      map.addLayer(cropOrigin);
     },
 
     createdLCropHighLayer() {
@@ -329,7 +392,7 @@ export default {
       return style;
     },
 
-    onChange(newValue, oldValue, ownerInstance, instance) {
+    receiveAllFarms(newValue, oldValue, ownerInstance, instance) {
         // console.log('service层中的options发生变化')
         // console.log('新值', newValue)
         // console.log('旧值', oldValue)
@@ -338,6 +401,17 @@ export default {
         // instance和ownerInstance的区别是：
         // instance.$el指向的是触发事件的那个节点；ownerInstance.$el指向当前vue文件中的根节点；
         // instance的作用目前尚不明确，官方没有给出用法
+      },
+      receiveCenter(newValue, oldValue, ownerInstance, instance){
+        centerCol = newValue
+        // console.log(centerCol);
+        map.getView().animate({
+          // 只设置需要的属性即可
+          center: centerCol, // 中心点
+          zoom: 17.5, // 缩放级别
+          rotation: undefined, // 缩放完成view视图旋转弧度
+          duration: 1000 // 缩放持续时间，默认不需要设置
+        })
       },
       receiveCurDate(newValue, oldValue, ownerInstance, instance){
         if (newValue === 0) {
