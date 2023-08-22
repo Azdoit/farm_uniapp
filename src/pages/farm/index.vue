@@ -75,12 +75,12 @@
         </scroll-view>
       </view>
     </view>
-    <view
-      v-show="item.isShow"
+    ><PopUp
+      :field="item"
+      @changeShowValue="changeShowValue"
       v-for="(item, index) in fields"
       :key="item.fieldName"
-      ><PopUp :field="item" @changeShowValue="changeShowValue"
-    /></view>
+    />
   </view>
 </template>
 

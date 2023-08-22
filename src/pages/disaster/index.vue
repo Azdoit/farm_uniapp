@@ -1,6 +1,6 @@
 <template>
   <view w-full h-full relative>
-    <!-- TODO：注意！！！给renderjs传值必须是和map容器是兄弟标签 -->
+    <!-- TODO：注意！！！给renderjs传值必须是和map容器是兄弟标签,不然app端会有bug -->
     <text :prop="allFarms" :change:prop="ol.receiveFarms"></text>
     <view
       id="map"
